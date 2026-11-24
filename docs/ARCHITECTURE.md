@@ -55,8 +55,18 @@ NEXUS/
 │   └── upgrades/
 ├── assets/
 ├── localization/
-└── tests/
+├── tests/
+│   ├── runner.gd        runner headless (D-024)
+│   ├── framework/       base das suítes e asserts
+│   ├── unit/            suítes test_*.gd
+│   └── output/          logs (ignorado no Git)
+└── tools/
+    ├── run_tests.sh     importa o projeto e roda os testes
+    └── smoke.sh         executa a cena principal e procura erros
 ```
+
+Diretórios são criados quando a fase correspondente começa. Arquivos
+`.uid` gerados pelo Godot são versionados (D-027).
 
 ## 4. Modelo de dados conceitual
 

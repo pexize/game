@@ -13,14 +13,14 @@ Este documento registra decisões de produto e questões ainda abertas.
   D-005   Sessões curtas                             Aprovada
   D-006   Visual minimalista e abstrato              Aprovada
   D-007   Android como plataforma inicial            Aprovada
-  D-008   Godot e GDScript                           Proposta técnica
+  D-008   Godot e GDScript                           Aprovada (versão em D-023)
   D-009   Três recursos: Energy, Matter e Data       Aprovada para MVP
   D-010   Seis componentes conceituais               Aprovada para MVP
   D-011   Sem monetização no protótipo               Aprovada
   D-012   Sem backend no MVP                         Aprovada
   D-013   Sem prestígio/reset no MVP                 Aprovada
 
-## Revisão de fluxos (2026-11-23) --- propostas aguardando aprovação
+## Revisão de fluxos (2026-11-23) --- aprovada pelo responsável pelo produto
 
 Origem: revisão técnica da documentação. Problemas corrigidos: o
 Collector exigia a produção de Matter para ser desbloqueado, e só ele
@@ -49,6 +49,27 @@ conteúdo.
   D-022   Data como moeda de melhorias Efficiency/Automation/avançadas;   ---             GDD §7--8
           Stage II no MVP = registro + tela de conclusão
 
+## Decisões técnicas da Fase 0 (2026-11-23)
+
+  ID      Decisão                                                        Estado
+  ------- -------------------------------------------------------------- ----------
+  D-023   Godot fixado em 4.7.2 estável (binário oficial linux.arm64)    Aprovada
+  D-024   Runner de testes próprio (`tests/runner.gd`, SceneTree          Aprovada
+          headless) em vez de GUT/gdUnit4: sem dependência externa;
+          código de saída 1 em falha, erro de execução, erro de
+          sintaxe ou nenhum teste executado
+  D-025   Definições de conteúdo em JSON em `data/`, validadas na         Aprovada
+          carga (comparáveis no Git, testáveis sem editor, sem
+          execução de script embutido como em `.tres`)
+  D-026   Renderer GL Compatibility (desktop e mobile), pensando em       Aprovada
+          aparelhos Android modestos
+  D-027   Arquivos `.uid` gerados pelo Godot são versionados; `.godot/`   Aprovada
+          não é
+
+Risco aberto: o Android SDK oficial não tem build-tools para Linux
+arm64, então gerar o APK neste Raspberry Pi pode não ser viável. Avaliar
+antes da Fase 6 (opções: outra máquina x86_64 ou CI).
+
 ## Parâmetros provisórios
 
   Parâmetro                  Valor de teste
@@ -69,25 +90,25 @@ Estes valores podem mudar após testes.
 
 ## Pendências
 
-Itens resolvidos por proposta (D-014 a D-022) ficam como "proposto"
-até aprovação.
+Itens riscados foram resolvidos pelas decisões D-014 a D-022,
+aprovadas em 2026-11-23.
 
 1.  Fechar produção e custo inicial de cada componente. *(estrutura
-    proposta em D-014; números em aberto)*
+    em D-014; números em aberto)*
 2.  ~~Sequência de desbloqueios sem dependências circulares.~~ →
-    proposto D-015
+    D-015
 3.  ~~Regras de alocação com múltiplos produtores/consumidores.~~ →
-    proposto D-018
-4.  ~~Armazenamento máximo por recurso.~~ → proposto D-020 (valor em
+    D-018
+4.  ~~Armazenamento máximo por recurso.~~ → D-020 (valor em
     aberto)
-5.  Limites de componentes e conexões. *(portas propostas em D-017;
+5.  Limites de componentes e conexões. *(portas em D-017;
     limite total de componentes em aberto)*
-6.  ~~Comportamento de componentes sem energia.~~ → proposto D-018
-7.  ~~Processor transforma ou altera eficiência.~~ → proposto D-019
+6.  ~~Comportamento de componentes sem energia.~~ → D-018
+7.  ~~Processor transforma ou altera eficiência.~~ → D-019
 8.  Condições e recompensas numéricas das oito descobertas.
     *(estrutura em D-015; valores N e X s em aberto)*
-9.  ~~Desconexão e remoção de componentes.~~ → proposto D-016/D-017
-10. ~~Horário local alterado durante ausência.~~ → proposto D-021
+9.  ~~Desconexão e remoção de componentes.~~ → D-016/D-017
+10. ~~Horário local alterado durante ausência.~~ → D-021
 
 ## Processo de alteração
 

@@ -1,49 +1,65 @@
 # NEXUS --- Documentação do projeto
 
 **Versão:** 1.0\
-**Status:** Especificação inicial para revisão técnica\
+**Status:** Fase 0 (fundação) concluída; Fase 1 (economia) a seguir\
 **Plataforma-alvo:** Android\
-**Engine:** Godot / GDScript\
+**Engine:** Godot 4.7.2 / GDScript\
 **Modelo:** Idle incremental com descoberta por condições emergentes
 
 ## Documentos
 
-  -----------------------------------------------------------------------
-  Arquivo                             Finalidade
-  ----------------------------------- -----------------------------------
-  `VISION.md`                         Visão, proposta de valor e
-                                      princípios
+| Arquivo                   | Finalidade                                   |
+| ------------------------- | -------------------------------------------- |
+| `docs/VISION.md`          | Visão, proposta de valor e princípios        |
+| `docs/GDD.md`             | Documento de design do jogo                  |
+| `docs/FUNCTIONAL_SPEC.md` | Requisitos funcionais e critérios de aceitação |
+| `docs/ECONOMY.md`         | Recursos, produção, custos e balanceamento   |
+| `docs/ARCHITECTURE.md`    | Arquitetura técnica e modelo de dados        |
+| `docs/ROADMAP.md`         | Fases de desenvolvimento e entregas          |
+| `docs/DECISIONS.md`       | Registro de decisões e pendências            |
+| `CLAUDE.md`               | Instruções de trabalho para Claude           |
 
-  `GDD.md`                            Documento de design do jogo
+## Requisitos
 
-  `FUNCTIONAL_SPEC.md`                Requisitos funcionais e critérios
-                                      de aceitação
+- Godot **4.7.2** (versão fixada em D-023). Nesta máquina:
+  `~/bin/godot` → `~/bin/godot-4.7.2/Godot_v4.7.2-stable_linux.arm64`.
+- Outro binário pode ser usado com a variável `GODOT=/caminho/para/godot`.
 
-  `ECONOMY.md`                        Recursos, produção, custos e
-                                      balanceamento
+## Comandos
 
-  `ARCHITECTURE.md`                   Arquitetura técnica e modelo de
-                                      dados
+```sh
+# Rodar todos os testes (importa o projeto e executa o runner headless)
+tools/run_tests.sh
 
-  `ROADMAP.md`                        Fases de desenvolvimento e entregas
+# Smoke test: executa a cena principal por 300 frames e procura erros no log
+tools/smoke.sh
 
-  `DECISIONS.md`                      Registro de decisões e pendências
+# Abrir o editor
+~/bin/godot --path . -e
+```
 
-  `CLAUDE.md`                         Instruções de trabalho para Claude
-  -----------------------------------------------------------------------
+`tools/run_tests.sh` termina com código 0 somente se todos os testes
+passarem.
 
-## Como usar
+## Estrutura
 
-1.  Coloque estes arquivos na raiz do repositório.
-2.  Inicialize o Git antes de começar a implementação.
-3.  Peça ao Claude para ler toda a documentação e fazer uma revisão
-    técnica.
-4.  Não autorize a implementação integral de uma só vez.
-5.  Aprove cada fase e exija testes reproduzíveis.
+```text
+NEXUS/
+├── project.godot
+├── docs/            documentação de produto e engenharia
+├── scenes/main/     cena principal (placeholder na Fase 0)
+├── scripts/         lógica do jogo (sem dependência de interface)
+├── data/            definições de conteúdo em JSON
+├── tests/           runner headless e testes
+└── tools/           scripts de linha de comando
+```
 
-## Estado desta documentação
+Diretórios de módulos são criados quando a fase correspondente começa,
+para não manter pastas vazias.
 
-Esta é uma especificação de produto e engenharia inicial. Ela não
-substitui testes de jogabilidade nem balanceamento empírico. Valores
-econômicos ainda não definidos devem permanecer configuráveis e ser
-calibrados durante os protótipos.
+## Processo
+
+1. Cada fase é aprovada pelo responsável pelo produto antes de começar.
+2. Mudanças de economia, progressão ou arquitetura são registradas em
+   `docs/DECISIONS.md`.
+3. Valores econômicos permanecem configuráveis até a calibração.

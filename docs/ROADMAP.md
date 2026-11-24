@@ -10,6 +10,12 @@ diretórios. - Documentação revisada. - Build mínimo executável.
 
 Critério de saída: projeto abre e executa sem erros.
 
+**Status: concluída em 2026-11-23.** `tools/run_tests.sh` executa 9
+testes, que passam; o runner foi verificado com falhas propositais
+(asserção, erro de execução, erro de sintaxe), e todas resultaram em
+código de saída 1. `tools/smoke.sh` executa a cena principal por 300
+frames sem erros.
+
 ## Fase 1 --- Economia
 
 Entregas: - Definições de recursos. - Saldos. - Produção e consumo. -
