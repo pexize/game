@@ -1,0 +1,8 @@
+{
+  "id": "global_output", "name_key": "UPG_GLOBAL_OUTPUT",
+  "category": "production", "target": "all",
+  "effect": { "type": "output_multiplier", "per_level": 0.1 },
+  "cost": { "matter": 100, "data": 15 }, "growth": 2.0, "max_level": 5,
+  "requires_features": ["data_upgrades", "advanced_upgrades"],
+  "prerequisites": ["generator_output"]
+}

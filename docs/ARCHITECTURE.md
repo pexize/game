@@ -59,7 +59,8 @@ NEXUS/
 ├── scripts/
 │   ├── core/nx_result.gd
 │   ├── economy/             definições, estado, ledger, construção, rede, motor
-│   └── progression/         regras, avaliador e visibilidade das descobertas
+│   ├── progression/         descobertas e regras das melhorias
+│   └── automation/          automação (compra automática de melhoria)
 ├── tests/
 │   ├── runner.gd        runner headless (D-024)
 │   ├── framework/       base das suítes e asserts
@@ -120,6 +121,15 @@ rejeitados na ligação. A lista de filhos é derivada de `parent`.
 O módulo `NxNetwork` é o único que altera `parent`, `enabled` e remove
 instâncias; ele também calcula o conjunto de componentes ativos.
 
+### UpgradeDefinition
+
+-   id, name_key
+-   category (`production` | `efficiency`)
+-   target (id de componente ou `all`)
+-   effect `{type, per_level}`
+-   cost `{resource_id: qty}`, growth, max_level
+-   requires_features, prerequisites (outras melhorias)
+
 ### DiscoveryDefinition
 
 -   id
@@ -143,8 +153,8 @@ instâncias; ele também calcula o conjunto de componentes ativos.
 -   features (recursos liberados por recompensas, ex.: `automation`)
 -   discoveries `{id: {order, time_ms}}`
 -   condition_progress `{id: {índice da condição: ms}}`
--   purchased_upgrades `{id: level}`
--   automation_settings
+-   upgrades `{id: level}`
+-   automation `{enabled, target}`
 -   statistics (totais acumulados por recurso)
 -   stage
 

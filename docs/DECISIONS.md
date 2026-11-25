@@ -133,6 +133,22 @@ conteúdo.
           Contadores sustentados zeram quando a condição falha e são
           salvos no estado. A automação entra na Fase 4.
 
+## Decisões de implementação da Fase 4 (2026-11-24)
+
+  ID      Decisão                                                        Estado
+  ------- -------------------------------------------------------------- -----------
+  D-043   Efeitos das melhorias: `output_multiplier` (1 + k × nível) e    Proposta
+          `input_multiplier` (1 − k × nível, consumo mínimo de 10%),
+          por componente ou `"all"`, multiplicativos entre si.
+  D-044   Curva de custo ceil(base × growth^nível), determinista, com     Aprovada
+          tolerância de ruído e teto (implementa ECONOMY §6).
+  D-045   Automação = recurso liberado por D6, não uma melhoria; compra   Proposta
+          a melhoria escolhida, no máximo uma por tick, depois das
+          descobertas, pelas mesmas regras da compra manual. A categoria
+          "Automation" do GDD §8 fica como esse recurso.
+  D-046   D2 passa a conceder também `production_upgrades` (alteração     Proposta
+          de dados em `data/discoveries/production_cycle.json`).
+
 Risco aberto: o Android SDK oficial não tem build-tools para Linux
 arm64, então gerar o APK neste Raspberry Pi pode não ser viável. Avaliar
 antes da Fase 6 (opções: outra máquina x86_64 ou CI).

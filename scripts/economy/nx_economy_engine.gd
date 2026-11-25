@@ -28,6 +28,7 @@ static func step(state: NxGameState, defs: NxDefinitions, dt_ms: int) -> NxStepR
 	# Processor ativo multiplica a produção dos seus filhos diretos; o
 	# efeito não é transitivo, porque é lido do pai imediato (D-019, D-036).
 	var active_set := NxNetwork.active_ids(state, defs)
+	var modifiers := NxUpgrades.modifiers(state, defs)
 	var active: Array = []
 	for instance_id: int in state.components:
 		if not active_set.has(instance_id):
@@ -37,7 +38,14 @@ static func step(state: NxGameState, defs: NxDefinitions, dt_ms: int) -> NxStepR
 		var parent := int(inst["parent"])
 		if parent != 0 and active_set.has(parent):
 			mult = defs.components[state.components[parent]["def"]]["child_multiplier"]
-		active.append({"id": instance_id, "def": defs.components[inst["def"]], "mult": mult})
+		var def_id: String = inst["def"]
+		active.append({
+			"id": instance_id, "def": defs.components[def_id],
+			# Processor do pai × melhorias de produção do próprio componente.
+			"mult": mult * float(modifiers["out"].get(def_id, 1.0)),
+			# Melhorias de eficiência reduzem o consumo nominal.
+			"in_mult": float(modifiers["in"].get(def_id, 1.0)),
+		})
 
 	var production := {}
 	var consumption := {}
@@ -54,7 +62,7 @@ static func step(state: NxGameState, defs: NxDefinitions, dt_ms: int) -> NxStepR
 			if def["outputs"].has(rid):
 				produced += floori(_boosted(_nominal(def["outputs"][rid], dt_ms), entry["mult"]) * _efficiency(def, report.ratios))
 			if def["inputs"].has(rid):
-				demand += _nominal(def["inputs"][rid], dt_ms)
+				demand += _demand(def["inputs"][rid], dt_ms, entry["in_mult"])
 		production[rid] = produced
 		var available: int = state.amount(rid) + produced
 		report.ratios[rid] = 1.0 if demand == 0 else minf(1.0, float(available) / float(demand))
@@ -65,7 +73,7 @@ static func step(state: NxGameState, defs: NxDefinitions, dt_ms: int) -> NxStepR
 		var eff := _efficiency(def, report.ratios)
 		report.efficiency[entry["id"]] = eff
 		for rid: String in def["inputs"]:
-			consumption[rid] += floori(_nominal(def["inputs"][rid], dt_ms) * eff)
+			consumption[rid] += floori(_demand(def["inputs"][rid], dt_ms, entry["in_mult"]) * eff)
 
 	# 3) Aplicar produção e consumo juntos, com limite de armazenamento.
 	for rid in defs.resource_ids:
@@ -88,6 +96,11 @@ static func step(state: NxGameState, defs: NxDefinitions, dt_ms: int) -> NxStepR
 ## Produção nominal depois do multiplicador do pai, arredondada para baixo.
 static func _boosted(nominal: int, mult: float) -> int:
 	return floori(float(nominal) * mult)
+
+
+## Consumo nominal (milli) depois das melhorias de eficiência, para baixo.
+static func _demand(rate: int, dt_ms: int, in_mult: float) -> int:
+	return floori(float(_nominal(rate, dt_ms)) * in_mult)
 
 
 ## Quantidade nominal (milli) de uma taxa (milli/s) em `dt_ms`.

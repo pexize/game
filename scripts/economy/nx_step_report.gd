@@ -14,6 +14,8 @@ var ratios := {}
 var efficiency := {}
 ## ids das descobertas concedidas depois deste passo (preenchido por NxSimulation)
 var granted: Array = []
+## compras feitas pela automação neste tick: [{"id": String, "level": int}]
+var auto_purchases: Array = []
 
 
 ## Taxa líquida em milésimos por segundo (produção − consumo).

@@ -70,6 +70,12 @@ custo. - Primeira automação.
 Critério de saída: melhorias e automação produzem mudanças observáveis e
 testadas.
 
+**Status: concluída em 2026-11-24.** Melhorias por componente e globais
+em dados, curva de custo determinista com arredondamento e teto, compra
+atômica com pré-visualização de custo e efeito, efeito no motor, primeira
+automação ligada ao tick. 162 testes, com 17 mutações manuais detectadas.
+Pendentes de aprovação: D-043, D-045 e D-046.
+
 ## Fase 5 --- Save e offline
 
 Entregas: - Salvamento automático. - Versionamento. - Backup e

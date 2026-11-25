@@ -1,0 +1,7 @@
+{
+  "id": "generator_output", "name_key": "UPG_GENERATOR_OUTPUT",
+  "category": "production", "target": "generator",
+  "effect": { "type": "output_multiplier", "per_level": 0.25 },
+  "cost": { "matter": 20 }, "growth": 1.6, "max_level": 6,
+  "requires_features": ["production_upgrades"]
+}

@@ -127,10 +127,32 @@ redistribuída no mesmo passo.
 
 Para melhorias repetíveis:
 
-`cost(level) = base_cost × growth_factor ^ level`
+`cost(level) = ceil(base_cost × growth_factor ^ level)`
 
-Arredondamento, limites numéricos e comportamento para níveis altos
-devem ser definidos no código econômico e testados.
+`level` é o nível atual (0 = custo do primeiro nível), e cada recurso do
+custo segue a sua própria curva. Regras implementadas (D-044):
+
+-   A potência é feita por multiplicações repetidas em ponto flutuante,
+    que são deterministas em qualquer arquitetura (`pow` não é).
+-   Arredonda para cima, com tolerância de 1e-6 em milésimos: ruído de
+    ponto flutuante (3000 × 1,1 = 3300.0000000000005) não custa uma
+    unidade a mais.
+-   Satura em 9e15 milésimos (abaixo de 2^53, exato em ponto
+    flutuante); nada estoura nem fica negativo.
+-   Validação na carga: `1 ≤ growth ≤ 10` e `1 ≤ max_level ≤ 100`.
+
+### Efeito das melhorias (D-043)
+
+-   `output_multiplier` (categoria Production): produção do alvo ×
+    `(1 + per_level × nível)`. Alvo: um componente ou `"all"` (inclui o
+    Core). Melhorias diferentes se multiplicam entre si e com o bônus do
+    Processor.
+-   `input_multiplier` (categoria Efficiency): consumo do alvo ×
+    `(1 − per_level × nível)`, nunca abaixo de 10% (validado). Reduz a
+    demanda sem reduzir a produção.
+-   Production custa Matter; Efficiency e as avançadas custam Data
+    (D-022). Cada melhoria exige os recursos de jogo (`unlock_feature`)
+    concedidos por descobertas.
 
 ## 7. Progresso offline
 

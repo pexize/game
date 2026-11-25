@@ -47,6 +47,8 @@ var balance := {}
 var discoveries := {}
 ## ids em ordem topológica: pré-requisitos sempre antes de quem depende deles
 var discovery_order := PackedStringArray()
+## id -> melhoria normalizada (ver NxUpgradeRules)
+var upgrades := {}
 
 
 func is_valid() -> bool:
@@ -58,14 +60,15 @@ static func load_from_dir(dir_path: String) -> NxDefinitions:
 	var raw_resources := defs._read_dir(dir_path.path_join("resources"))
 	var raw_components := defs._read_dir(dir_path.path_join("components"))
 	var raw_discoveries := defs._read_dir(dir_path.path_join("discoveries"))
+	var raw_upgrades := defs._read_dir(dir_path.path_join("upgrades"))
 	var raw_balance: Variant = defs._read_file(dir_path.path_join("balance.json"))
-	defs._build(raw_resources, raw_components, raw_balance if raw_balance is Dictionary else {}, raw_discoveries)
+	defs._build(raw_resources, raw_components, raw_balance if raw_balance is Dictionary else {}, raw_discoveries, raw_upgrades)
 	return defs
 
 
-static func from_dicts(raw_resources: Array, raw_components: Array, raw_balance: Dictionary, raw_discoveries: Array = []) -> NxDefinitions:
+static func from_dicts(raw_resources: Array, raw_components: Array, raw_balance: Dictionary, raw_discoveries: Array = [], raw_upgrades: Array = []) -> NxDefinitions:
 	var defs := NxDefinitions.new()
-	defs._build(raw_resources, raw_components, raw_balance, raw_discoveries)
+	defs._build(raw_resources, raw_components, raw_balance, raw_discoveries, raw_upgrades)
 	return defs
 
 
@@ -109,11 +112,12 @@ func _read_file(path: String) -> Variant:
 
 # --- validação -------------------------------------------------------------
 
-func _build(raw_resources: Array, raw_components: Array, raw_balance: Dictionary, raw_discoveries: Array) -> void:
+func _build(raw_resources: Array, raw_components: Array, raw_balance: Dictionary, raw_discoveries: Array, raw_upgrades: Array) -> void:
 	_build_resources(raw_resources)
 	_build_components(raw_components)
 	_build_balance(raw_balance)
 	NxDiscoveryRules.build(self, raw_discoveries)
+	NxUpgradeRules.build(self, raw_upgrades)
 	_check_winnable_with_discoveries()
 
 

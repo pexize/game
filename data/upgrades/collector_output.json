@@ -1,0 +1,7 @@
+{
+  "id": "collector_output", "name_key": "UPG_COLLECTOR_OUTPUT",
+  "category": "production", "target": "collector",
+  "effect": { "type": "output_multiplier", "per_level": 0.2 },
+  "cost": { "matter": 30 }, "growth": 1.6, "max_level": 6,
+  "requires_features": ["production_upgrades"]
+}

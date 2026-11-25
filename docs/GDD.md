@@ -229,6 +229,13 @@ Moedas de compra: melhorias Production custam Matter. Melhorias
 Efficiency, Automation e avançadas custam Data (com ou sem Matter), o
 que dá a Data uma função econômica própria a partir de D4.
 
+Cada melhoria tem níveis, custo crescente (ECONOMY §6), um alvo (um
+componente ou todos) e um efeito de produção ou de eficiência. Os recursos
+de jogo que as liberam vêm das descobertas: `production_upgrades` (D2),
+`data_upgrades` (D4), `efficiency_upgrades` (D5) e `advanced_upgrades`
+(D7). A automação não é uma melhoria: é o recurso `automation` (D6), que
+compra sozinha a melhoria escolhida (§10).
+
 Melhorias podem ser específicas de componente ou globais. A interface
 apresenta custo e efeito antes da compra. Melhorias repetíveis usam
 curvas configuráveis.

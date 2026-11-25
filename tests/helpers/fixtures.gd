@@ -43,6 +43,40 @@ static func raw_balance() -> Dictionary:
 	}
 
 
+## Melhorias de teste, com números fáceis de conferir à mão.
+static func raw_upgrades() -> Array:
+	return [
+		{"id": "gen_up", "category": "production", "target": "generator",
+			"effect": {"type": "output_multiplier", "per_level": 0.25},
+			"cost": {"matter": 20}, "growth": 1.6, "max_level": 4,
+			"requires_features": ["production_upgrades"]},
+		{"id": "global_up", "category": "production", "target": "all",
+			"effect": {"type": "output_multiplier", "per_level": 0.1},
+			"cost": {"matter": 50, "data": 10}, "growth": 2.0, "max_level": 3,
+			"requires_features": ["data_upgrades"], "prerequisites": ["gen_up"]},
+		{"id": "col_eff", "category": "efficiency", "target": "collector",
+			"effect": {"type": "input_multiplier", "per_level": 0.1},
+			"cost": {"data": 5}, "growth": 1.5, "max_level": 5,
+			"requires_features": ["data_upgrades"]},
+	]
+
+
+## Descoberta que concede os recursos de jogo exigidos pelas melhorias de teste.
+static func raw_feature_discovery() -> Dictionary:
+	return {"id": "grants", "prerequisites": [],
+		"conditions": [{"type": "lifetime_produced", "resource": "energy", "min": 1}],
+		"rewards": [
+			{"type": "unlock_feature", "feature": "production_upgrades"},
+			{"type": "unlock_feature", "feature": "data_upgrades"},
+			{"type": "unlock_feature", "feature": "automation"},
+		]}
+
+
+static func defs_with_upgrades() -> NxDefinitions:
+	return NxDefinitions.from_dicts(raw_resources(), raw_components(), raw_balance(),
+		[raw_feature_discovery()], raw_upgrades())
+
+
 static func defs() -> NxDefinitions:
 	return NxDefinitions.from_dicts(raw_resources(), raw_components(), raw_balance())
 

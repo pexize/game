@@ -1,7 +1,7 @@
 # NEXUS --- Documentação do projeto
 
 **Versão:** 1.0\
-**Status:** Fases 0 a 3 (fundação, economia, rede e descobertas) concluídas; Fase 4 (melhorias e automação) a seguir\
+**Status:** Fases 0 a 4 (fundação, economia, rede, descobertas, melhorias e automação) concluídas; Fase 5 (save e offline) a seguir\
 **Plataforma-alvo:** Android\
 **Engine:** Godot 4.7.2 / GDScript\
 **Modelo:** Idle incremental com descoberta por condições emergentes
@@ -36,6 +36,7 @@ tools/smoke.sh
 
 # Simular a economia sem interface (CSV em stdout)
 tools/simulate.sh --steps=300 --every=20
+tools/simulate.sh --steps=900 --every=300 --auto=generator_output   # com automação
 
 # Abrir o editor
 ~/bin/godot --path . -e

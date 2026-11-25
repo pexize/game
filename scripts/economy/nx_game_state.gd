@@ -25,6 +25,10 @@ var condition_progress := {}
 var features := {}
 ## estágio atual (1 = Emergence, 2 = Organization)
 var stage := 1
+## id da melhoria -> nível comprado
+var upgrades := {}
+## automação: {"enabled": bool, "target": id da melhoria escolhida ou ""}
+var automation := {"enabled": false, "target": ""}
 
 
 static func new_game(defs: NxDefinitions) -> NxGameState:
@@ -88,6 +92,8 @@ func to_dict() -> Dictionary:
 		"condition_progress": condition_progress.duplicate(true),
 		"features": features.keys(),
 		"stage": stage,
+		"upgrades": upgrades.duplicate(),
+		"automation": automation.duplicate(),
 	}
 
 
@@ -107,6 +113,9 @@ static func from_dict(data: Dictionary) -> NxGameState:
 	for cid: String in data.get("unlocked", []):
 		state.unlocked[cid] = true
 	state.stage = int(data.get("stage", 1))
+	state.upgrades = _ints(data.get("upgrades", {}))
+	var auto: Dictionary = data.get("automation", {})
+	state.automation = {"enabled": bool(auto.get("enabled", false)), "target": str(auto.get("target", ""))}
 	for fid: String in data.get("features", []):
 		state.features[fid] = true
 	for did: String in data.get("discoveries", {}):

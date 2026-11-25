@@ -5,5 +5,8 @@
     { "type": "sustained", "seconds": 10,
       "condition": { "type": "net_rate_positive", "resources": ["energy", "matter"] } }
   ],
-  "rewards": [ { "type": "unlock_component", "component": "analyzer" } ]
+  "rewards": [
+    { "type": "unlock_component", "component": "analyzer" },
+    { "type": "unlock_feature", "feature": "production_upgrades" }
+  ]
 }
