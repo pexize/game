@@ -40,6 +40,12 @@ rede.
 Critério de saída: rede funcional sem ciclos exploráveis de geração
 gratuita.
 
+**Status: concluída em 2026-11-24.** `NxNetwork` (ligar, desligar,
+portas, ciclos, ativação, remoção com reembolso, validação da árvore) e
+motor com ativação por conectividade e multiplicador do Processor; 84
+testes, com mutações manuais da rede e do motor todas detectadas.
+Pendentes de aprovação: D-036 e D-038.
+
 ## Fase 3 --- Descobertas
 
 Entregas: - Condições quantitativas, estruturais, funcionais e

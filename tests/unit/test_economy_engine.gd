@@ -25,7 +25,7 @@ func test_core_alone_produces_energy() -> bool:
 func test_generator_adds_energy() -> bool:
 	var defs := Fixtures.defs()
 	var state := Fixtures.blank_state(defs)
-	state.add_component("generator")
+	Fixtures.add_connected(state, defs, "generator")
 	NxEconomyEngine.step(state, defs, DT)
 	assert_eq(state.amount("energy"), 2500, "core 1.0 + generator 1.5")
 	return true
@@ -35,7 +35,7 @@ func test_collector_converts_energy_to_matter() -> bool:
 	var defs := Fixtures.defs()
 	var state := Fixtures.blank_state(defs)
 	state.resources["energy"] = 10000
-	state.add_component("collector")
+	Fixtures.add_connected(state, defs, "collector")
 	var report := NxEconomyEngine.step(state, defs, DT)
 	assert_eq(state.amount("matter"), 500, "produz 0.5")
 	assert_eq(state.amount("energy"), 10500, "10 + core 1.0 - collector 0.5")
@@ -49,7 +49,7 @@ func test_shortage_slows_consumers_proportionally() -> bool:
 	var defs := Fixtures.defs()
 	var state := Fixtures.blank_state(defs)
 	for i in range(4):
-		state.add_component("collector")
+		Fixtures.add_connected(state, defs, "collector")
 	var report := NxEconomyEngine.step(state, defs, DT)
 	assert_near(report.ratios["energy"], 0.5, 0.0001, "razão de Energy")
 	assert_eq(state.amount("energy"), 0, "toda a energia foi usada")
@@ -65,7 +65,7 @@ func test_rounding_never_creates_resources() -> bool:
 	var defs := Fixtures.defs()
 	var state := Fixtures.blank_state(defs)
 	for i in range(3):
-		state.add_component("collector")
+		Fixtures.add_connected(state, defs, "collector")
 	var report := NxEconomyEngine.step(state, defs, DT)
 	assert_eq(report.produced["matter"], 999, "3 x floor(500 x 2/3)")
 	assert_true(report.produced["matter"] <= 1000, "nunca acima do valor exato")
@@ -80,7 +80,7 @@ func test_component_limited_by_its_scarcest_input() -> bool:
 	var state := Fixtures.blank_state(defs)
 	state.resources["energy"] = 10000
 	state.resources["matter"] = 50  # 0.05 de 0.2 pedidos
-	state.add_component("analyzer")
+	Fixtures.add_connected(state, defs, "analyzer")
 	var report := NxEconomyEngine.step(state, defs, DT)
 	assert_near(report.ratios["matter"], 0.25, 0.0001)
 	assert_near(report.efficiency[2], 0.25, 0.0001, "vale a menor razão")
@@ -104,7 +104,7 @@ func test_resource_cap_discards_excess_but_reports_production() -> bool:
 func test_disabled_component_is_inactive() -> bool:
 	var defs := Fixtures.defs()
 	var state := Fixtures.blank_state(defs)
-	var generator := state.add_component("generator")
+	var generator := Fixtures.add_connected(state, defs, "generator")
 	state.components[generator]["enabled"] = false
 	NxEconomyEngine.step(state, defs, DT)
 	assert_eq(state.amount("energy"), 1000, "só o Core produz")
@@ -128,7 +128,7 @@ func test_never_negative_and_conserves_resources() -> bool:
 	state.resources["energy"] = 3000
 	state.resources["matter"] = 40000
 	for kind in ["collector", "collector", "analyzer", "analyzer", "generator"]:
-		state.add_component(kind)
+		Fixtures.add_connected(state, defs, kind)
 	for step in range(200):
 		var before := state.resources.duplicate()
 		var report := NxEconomyEngine.step(state, defs, DT)
@@ -145,11 +145,11 @@ func test_result_does_not_depend_on_component_order() -> bool:
 	var forward := Fixtures.blank_state(defs)
 	var backward := Fixtures.blank_state(defs)
 	for kind in kinds:
-		forward.add_component(kind)
+		Fixtures.add_connected(forward, defs, kind)
 	var reversed := kinds.duplicate()
 	reversed.reverse()
 	for kind in reversed:
-		backward.add_component(kind)
+		Fixtures.add_connected(backward, defs, kind)
 	for state in [forward, backward]:
 		state.resources["energy"] = 4000
 		state.resources["matter"] = 30000
@@ -172,7 +172,7 @@ func test_same_inputs_give_same_hash() -> bool:
 ## Hash de referência: se mudar, o motor ou o arredondamento mudou.
 ## Calculado primeiro em x86_64; conferir também em arm64 (determinismo).
 func test_golden_hash_of_scripted_run() -> bool:
-	assert_eq(_scripted_run(Fixtures.defs()), "f278dd1a300173eb854e2ad09342a127b39dcc78548dec430f86a09b10d9d942", "hash de referência")
+	assert_eq(_scripted_run(Fixtures.defs()), "fb25ddf75503338160c345bc47a8d9eea9e87131664577245bbb735cb0fbf19a", "hash de referência")
 	return true
 
 

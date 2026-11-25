@@ -12,7 +12,7 @@ func test_new_game_starts_valid() -> bool:
 	assert_eq(state.amount("data"), 0)
 	assert_eq(state.count_of("core"), 1, "um Core")
 	assert_true(state.is_unlocked("generator"))
-	assert_false(state.is_unlocked("processor"))
+	assert_false(state.is_unlocked("fantasma"), "desconhecido não está liberado")
 	return true
 
 

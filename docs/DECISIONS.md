@@ -95,6 +95,24 @@ conteúdo.
           de Energy (com 1.0 o saldo líquido de Energy zerava e o
           jogador que o construísse primeiro não pagaria o Generator)
 
+## Decisões de implementação da Fase 2 (2026-11-24)
+
+  ID      Decisão                                                        Estado
+  ------- -------------------------------------------------------------- -----------
+  D-035   Conexões persistidas como o campo `parent` de cada instância    Aprovada
+          (0 = sem pai). Equivale à lista Connection do modelo, e um
+          único pai por nó garante a árvore.
+  D-036   Ativação: o componente precisa de um caminho de nós            Proposta
+          habilitados até o Core; desabilitar um nó desativa a sua
+          sub-árvore. O multiplicador do Processor vale por inteiro
+          enquanto ele estiver ativo, sem depender da eficiência dele
+          (evita depender de razões de tiers ainda não resolvidos).
+  D-037   O Core não pode ser desabilitado. Remover reembolsa            Aprovada
+          `removal_refund` do custo, arredondado para baixo e limitado
+          pelo armazenamento, e deixa os filhos desconectados.
+  D-038   Construir não liga: o componente nasce solto e só opera        Proposta
+          depois de ligado (a interface fará os dois passos juntos)
+
 Risco aberto: o Android SDK oficial não tem build-tools para Linux
 arm64, então gerar o APK neste Raspberry Pi pode não ser viável. Avaliar
 antes da Fase 6 (opções: outra máquina x86_64 ou CI).

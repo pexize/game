@@ -16,6 +16,10 @@ func _play(plan: Array, seconds: int, defs: NxDefinitions) -> NxGameState:
 	for second in range(seconds):
 		bot.act(state, defs)
 		NxEconomyEngine.step(state, defs, DT)
+		var tree_errors := NxNetwork.validate(state, defs)
+		if not tree_errors.is_empty():
+			fail("árvore inválida em %ds: %s" % [second, tree_errors[0]])
+			return state
 		for rid in defs.resource_ids:
 			var amount := state.amount(rid)
 			if amount < 0:
@@ -68,12 +72,22 @@ func test_every_start_unlocked_component_is_buildable() -> bool:
 	# monta primeiro a fonte de Matter (Collector) e depois o componente.
 	var defs := _defs()
 	for def_id: String in defs.balance["start_unlocked"]:
-		var plan: Array = [["collector", 1], [def_id, 1]]
-		if def_id == "collector":
-			plan = [["collector", 1]]
+		var plan: Array = _route_to(def_id)
 		var state := _play(plan, 1800, defs)
 		assert_true(state.count_of(def_id) >= 1, "%s é construível partindo do início" % def_id)
 	return true
+
+
+## Caminho econômico até um componente: o Processor custa Data, que só o
+## Analyzer produz; o Analyzer custa Matter, que só o Collector produz.
+func _route_to(def_id: String) -> Array:
+	match def_id:
+		"collector":
+			return [["collector", 1]]
+		"processor":
+			return [["generator", 1], ["collector", 1], ["relay", 1], ["analyzer", 1], ["processor", 1]]
+		_:
+			return [["generator", 1], ["collector", 1], ["relay", 1], [def_id, 1]]
 
 
 func test_waiting_alone_never_builds_matter_costing_components() -> bool:

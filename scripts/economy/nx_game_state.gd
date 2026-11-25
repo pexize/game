@@ -6,7 +6,9 @@ extends RefCounted
 
 ## id do recurso -> quantidade (milli)
 var resources := {}
-## instance_id (int) -> {"def": String, "enabled": bool}
+## instance_id (int) -> {"def": String, "enabled": bool, "parent": int}
+## `parent` é o instance_id do pai na árvore de conexões; 0 = sem pai
+## (o Core é a raiz e os demais começam desconectados).
 var components := {}
 var next_instance_id := 1
 ## id do componente -> true
@@ -29,10 +31,11 @@ static func new_game(defs: NxDefinitions) -> NxGameState:
 
 
 ## Cria a instância sem cobrar nada; quem cobra é o BuildService.
+## Nasce desconectada; quem liga é o NxNetwork.
 func add_component(def_id: String) -> int:
 	var instance_id := next_instance_id
 	next_instance_id += 1
-	components[instance_id] = {"def": def_id, "enabled": true}
+	components[instance_id] = {"def": def_id, "enabled": true, "parent": 0}
 	return instance_id
 
 
@@ -76,7 +79,11 @@ static func from_dict(data: Dictionary) -> NxGameState:
 	state.time_ms = int(data.get("time_ms", 0))
 	for key: String in data.get("components", {}):
 		var inst: Dictionary = data["components"][key]
-		state.components[int(key)] = {"def": str(inst["def"]), "enabled": bool(inst["enabled"])}
+		state.components[int(key)] = {
+			"def": str(inst["def"]),
+			"enabled": bool(inst["enabled"]),
+			"parent": int(inst.get("parent", 0)),
+		}
 	for cid: String in data.get("unlocked", []):
 		state.unlocked[cid] = true
 	return state

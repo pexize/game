@@ -14,7 +14,7 @@ static func raw_resources() -> Array:
 
 static func raw_components() -> Array:
 	return [
-		{"id": "core", "outputs": {"energy": 1.0}, "output_ports": 3,
+		{"id": "core", "outputs": {"energy": 1.0}, "output_ports": 10,
 			"removable": false, "build_limit": 1},
 		{"id": "generator", "cost": {"energy": 10}, "outputs": {"energy": 1.5},
 			"output_ports": 1},
@@ -23,6 +23,10 @@ static func raw_components() -> Array:
 		{"id": "analyzer", "cost": {"matter": 25},
 			"inputs": {"energy": 1.0, "matter": 0.2}, "outputs": {"data": 0.1},
 			"output_ports": 1},
+		{"id": "relay", "cost": {"matter": 15}, "inputs": {"energy": 0.3},
+			"output_ports": 4},
+		{"id": "processor", "cost": {"matter": 40, "data": 10},
+			"inputs": {"energy": 0.8}, "output_ports": 2, "child_multiplier": 1.5},
 	]
 
 
@@ -30,7 +34,7 @@ static func raw_balance() -> Dictionary:
 	return {
 		"core_component": "core",
 		"start_resources": {"energy": 5, "matter": 10},
-		"start_unlocked": ["generator", "collector", "analyzer"],
+		"start_unlocked": ["generator", "collector", "analyzer", "relay", "processor"],
 		"dt_active_ms": 1000,
 		"dt_offline_ms": 60000,
 		"offline_cap_s": 28800,
@@ -41,6 +45,14 @@ static func raw_balance() -> Dictionary:
 
 static func defs() -> NxDefinitions:
 	return NxDefinitions.from_dicts(raw_resources(), raw_components(), raw_balance())
+
+
+## Cria o componente (sem cobrar) e o liga ao ativo mais próximo do Core com
+## porta livre. Devolve o instance_id.
+static func add_connected(state: NxGameState, defs: NxDefinitions, def_id: String) -> int:
+	var instance_id := state.add_component(def_id)
+	NxNetwork.connect_components(state, defs, NxNetwork.first_free_parent(state, defs), instance_id)
+	return instance_id
 
 
 ## Estado vazio com recursos zerados e só o Core, para cenários controlados.

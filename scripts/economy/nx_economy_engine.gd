@@ -13,8 +13,9 @@ extends RefCounted
 ## Aritmética inteira (milli) com arredondamento para baixo na produção
 ## e no consumo: o motor nunca cria recursos por arredondamento.
 ##
-## Fase 1: todo componente habilitado é considerado ativo. Conectividade
-## e o multiplicador do Processor entram na Fase 2.
+## Conectividade e multiplicador do Processor: ver NxNetwork. O multiplicador
+## vale integralmente enquanto o Processor estiver ativo, sem depender da
+## eficiência dele (D-036).
 
 
 static func step(state: NxGameState, defs: NxDefinitions, dt_ms: int) -> NxStepReport:
@@ -23,11 +24,20 @@ static func step(state: NxGameState, defs: NxDefinitions, dt_ms: int) -> NxStepR
 	if dt_ms <= 0:
 		return report
 
+	# Só opera quem tem caminho habilitado até o Core (NxNetwork). Um
+	# Processor ativo multiplica a produção dos seus filhos diretos; o
+	# efeito não é transitivo, porque é lido do pai imediato (D-019, D-036).
+	var active_set := NxNetwork.active_ids(state, defs)
 	var active: Array = []
 	for instance_id: int in state.components:
+		if not active_set.has(instance_id):
+			continue
 		var inst: Dictionary = state.components[instance_id]
-		if inst["enabled"]:
-			active.append({"id": instance_id, "def": defs.components[inst["def"]]})
+		var mult := 1.0
+		var parent := int(inst["parent"])
+		if parent != 0 and active_set.has(parent):
+			mult = defs.components[state.components[parent]["def"]]["child_multiplier"]
+		active.append({"id": instance_id, "def": defs.components[inst["def"]], "mult": mult})
 
 	var production := {}
 	var consumption := {}
@@ -42,7 +52,7 @@ static func step(state: NxGameState, defs: NxDefinitions, dt_ms: int) -> NxStepR
 		for entry: Dictionary in active:
 			var def: Dictionary = entry["def"]
 			if def["outputs"].has(rid):
-				produced += floori(_nominal(def["outputs"][rid], dt_ms) * _efficiency(def, report.ratios))
+				produced += floori(_boosted(_nominal(def["outputs"][rid], dt_ms), entry["mult"]) * _efficiency(def, report.ratios))
 			if def["inputs"].has(rid):
 				demand += _nominal(def["inputs"][rid], dt_ms)
 		production[rid] = produced
@@ -73,6 +83,11 @@ static func step(state: NxGameState, defs: NxDefinitions, dt_ms: int) -> NxStepR
 
 	state.time_ms += dt_ms
 	return report
+
+
+## Produção nominal depois do multiplicador do pai, arredondada para baixo.
+static func _boosted(nominal: int, mult: float) -> int:
+	return floori(float(nominal) * mult)
 
 
 ## Quantidade nominal (milli) de uma taxa (milli/s) em `dt_ms`.

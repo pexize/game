@@ -106,17 +106,18 @@ fonte de verdade.
 -   definition_id
 -   level
 -   enabled
--   position (layout da tela Network)
+-   parent (0 = sem pai)
+-   position (layout da tela Network; ainda não implementado)
 
-### Connection
+### Conexões
 
--   id
--   parent_instance_id
--   child_instance_id
+Não há entidade Connection separada (D-035): cada ComponentInstance
+guarda `parent` (instance_id do pai; 0 = sem pai). Como cada nó tem no
+máximo um pai e a raiz é o Core, a rede é uma árvore e ciclos são
+rejeitados na ligação. A lista de filhos é derivada de `parent`.
 
-Cada filho tem no máximo uma conexão de entrada, o que torna a rede uma
-árvore com raiz no Core. As listas de conexões de cada instância são
-derivadas, e não persistidas.
+O módulo `NxNetwork` é o único que altera `parent`, `enabled` e remove
+instâncias; ele também calcula o conjunto de componentes ativos.
 
 ### DiscoveryDefinition
 
