@@ -39,6 +39,7 @@ static func raw_balance() -> Dictionary:
 		"dt_offline_ms": 60000,
 		"offline_cap_s": 28800,
 		"offline_efficiency": 0.7,
+		"offline_auto_purchase_limit": 20,
 		"removal_refund": 0.5,
 	}
 
@@ -75,6 +76,45 @@ static func raw_feature_discovery() -> Dictionary:
 static func defs_with_upgrades() -> NxDefinitions:
 	return NxDefinitions.from_dicts(raw_resources(), raw_components(), raw_balance(),
 		[raw_feature_discovery()], raw_upgrades())
+
+
+## Estado de meio de jogo, com rede, descobertas, melhorias e automação.
+static func rich_state(defs: NxDefinitions) -> NxGameState:
+	var state := NxGameState.new_game(defs)
+	var bot := NxGreedyBot.new()
+	for i in range(200):
+		bot.act(state, defs)
+		NxSimulation.tick(state, defs, 1000)
+	state.upgrades["gen_up"] = 2
+	NxAutomation.configure(state, defs, true, "gen_up")
+	return state
+
+
+## Diretório de teste em user://, vazio. Chame `remove_dir` no fim do teste.
+static func temp_dir(name: String) -> String:
+	var path := "user://nx_tests/%s" % name
+	remove_dir(path)
+	DirAccess.make_dir_recursive_absolute(path)
+	return path
+
+
+static func remove_dir(path: String) -> void:
+	var dir := DirAccess.open(path)
+	if dir == null:
+		return
+	for file_name in dir.get_files():
+		dir.remove(file_name)
+	DirAccess.remove_absolute(path)
+
+
+static func read_file(path: String) -> String:
+	return FileAccess.get_file_as_string(path)
+
+
+static func write_file(path: String, text: String) -> void:
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	file.store_string(text)
+	file.close()
 
 
 static func defs() -> NxDefinitions:

@@ -84,6 +84,16 @@ recuperação. - Cálculo offline. - Tela de resumo.
 Critério de saída: fechar e reabrir preserva o estado e aplica progresso
 offline corretamente.
 
+**Status: concluída em 2026-11-25.** Save com checksum e versão de
+esquema, escrita atômica com dois backups, recuperação, migrações em
+cadeia, bloqueio de save de versão futura, cálculo offline com o mesmo
+tick (passos de 60 s), limite de compras automáticas, e `NxSession`
+(abrir/fechar). 223 testes, com 20 mutações manuais detectadas e um save
+real da versão 1 como teste de regressão. Pendentes de aprovação: D-049 e
+D-051. Fica para a Fase 6: autosave periódico e eventos de
+suspensão/retomada do Android (a interface chama `NxSession`), tela
+Offline Summary.
+
 ## Fase 6 --- Interface mobile
 
 Entregas: - Dashboard. - Network. - Discoveries. - Navegação. - Feedback

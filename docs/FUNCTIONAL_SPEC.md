@@ -81,7 +81,9 @@ descobertas, melhorias, estatísticas necessárias e timestamp.
 ### FR-11 --- Recuperação
 
 O jogo deve validar o save e tentar recuperar backup válido se o arquivo
-principal estiver corrompido.
+principal estiver corrompido. Detalhes: `ARCHITECTURE.md` §7. Um save de
+versão mais nova que o jogo nunca é substituído por um backup antigo nem
+sobrescrito.
 
 ### FR-12 --- Interface
 
@@ -113,6 +115,9 @@ Parâmetros iniciais de teste: - Limite: 8 horas. - Eficiência: 70%.
 Fórmulas de referência:
 
 `simulated_time = min(max(elapsed_time, 0), offline_cap) × offline_efficiency`
+
+(O limite de compras automáticas por ausência e a marcação de ausência
+suspeita estão em `ECONOMY.md` §7.)
 
 O estado é avançado por `simulated_time` usando a mesma função de passo
 da partida ativa, com passo maior (`ECONOMY.md` §7). A eficiência se

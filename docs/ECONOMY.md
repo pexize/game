@@ -182,8 +182,21 @@ fechar o jogo permanecerá constante durante toda a ausência.
 5.  Gerar o resumo offline a partir da diferença entre os estados
     inicial e final.
 
-Teste de convergência: o resultado com `dt_offline = 60 s` deve ficar a
-menos de 1% do resultado com `dt = 1 s` em cenários de referência.
+Limite de compras automáticas por ausência: `offline_auto_purchase_limit`
+(valor de teste: 20). Ao atingi-lo, a automação não compra mais até o fim
+do cálculo, mas o resto da economia continua.
+
+Relógio: ausência negativa vale 0 (sem ganho); o teto de 8 h limita
+qualquer avanço de relógio; ausência acima de 30 dias é marcada como
+suspeita para a interface decidir o que mostrar. Não há antifraude.
+
+Precisão (medida em `tests/unit/test_offline.gd`): em rede sem déficit o
+passo de 60 s dá o mesmo resultado que o de 1 s (diferença 0%). Com
+déficit, o offline fica a ~0,02% do valor analítico. O passo ATIVO de 1 s
+é que perde precisão: arredondar para baixo em milésimos (D-030) tira até
+1 milésimo por componente por passo, o que chega a ~2% em taxas pequenas
+com eficiência fracionária (Data a 0,1/s). Sempre para baixo, nunca cria
+recursos; registrado como limitação conhecida (D-052).
 
 ## 8. Princípios de balanceamento
 

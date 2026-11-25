@@ -7,5 +7,6 @@
   "dt_offline_ms": 60000,
   "offline_cap_s": 28800,
   "offline_efficiency": 0.7,
+  "offline_auto_purchase_limit": 20,
   "removal_refund": 0.5
 }

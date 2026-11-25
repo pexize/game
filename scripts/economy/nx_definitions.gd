@@ -28,7 +28,7 @@ const _COMPONENT_KEYS := [
 const _BALANCE_KEYS := [
 	"notes", "core_component", "start_resources", "start_unlocked",
 	"dt_active_ms", "dt_offline_ms", "offline_cap_s", "offline_efficiency",
-	"removal_refund",
+	"offline_auto_purchase_limit", "removal_refund",
 ]
 
 var errors := PackedStringArray()
@@ -41,7 +41,8 @@ var resources := {}
 ##        "child_multiplier": float, "build_limit": int (0 = sem limite)}
 var components := {}
 ## core_component, start_resources (milli), start_unlocked, dt_active_ms,
-## dt_offline_ms, offline_cap_s, offline_efficiency, removal_refund
+## dt_offline_ms, offline_cap_s, offline_efficiency, offline_auto_purchase_limit,
+## removal_refund
 var balance := {}
 ## id -> descoberta normalizada (ver NxDiscoveryRules)
 var discoveries := {}
@@ -250,6 +251,9 @@ func _build_balance(raw: Dictionary) -> void:
 	var cap_s := _required_whole(raw, "offline_cap_s", where)
 	if dt_active <= 0 or dt_offline < dt_active or cap_s <= 0:
 		_err("%s: exige 0 < dt_active_ms ≤ dt_offline_ms e offline_cap_s > 0" % where)
+	var auto_limit := _required_whole(raw, "offline_auto_purchase_limit", where)
+	if auto_limit < 0:
+		_err("%s: 'offline_auto_purchase_limit' deve ser ≥ 0" % where)
 	var efficiency := float(raw.get("offline_efficiency", -1.0)) if _is_number(raw.get("offline_efficiency")) else -1.0
 	if efficiency <= 0.0 or efficiency > 1.0:
 		_err("%s: 'offline_efficiency' deve estar em (0, 1]" % where)
@@ -265,6 +269,7 @@ func _build_balance(raw: Dictionary) -> void:
 		"dt_offline_ms": dt_offline,
 		"offline_cap_s": cap_s,
 		"offline_efficiency": efficiency,
+		"offline_auto_purchase_limit": auto_limit,
 		"removal_refund": refund,
 	}
 

@@ -7,8 +7,10 @@ extends RefCounted
 ## a cada passo.
 
 
-static func tick(state: NxGameState, defs: NxDefinitions, dt_ms: int) -> NxStepReport:
+## `allow_automation` = false pula só a compra automática (usado pelo cálculo
+## offline quando o limite de compras da ausência acaba).
+static func tick(state: NxGameState, defs: NxDefinitions, dt_ms: int, allow_automation := true) -> NxStepReport:
 	var report := NxEconomyEngine.step(state, defs, dt_ms)
 	report.granted = NxDiscoveryEngine.evaluate(state, defs, report)
-	report.auto_purchases = NxAutomation.run(state, defs)
+	report.auto_purchases = NxAutomation.run(state, defs) if allow_automation else []
 	return report

@@ -186,13 +186,43 @@ recursos. A interface solicita ações e apresenta resultados.
 
 ## 7. Salvamento
 
--   JSON local inicialmente.
--   Campo `schema_version`.
--   Validação de dados na leitura.
--   Escrita atômica sempre que possível.
--   Backup rotativo.
--   Migrações explícitas entre versões.
--   Não salvar referências transitórias de nós da cena.
+Implementado em `scripts/save/` (`NxSaveManager`, `NxStateValidator`) e
+orquestrado por `NxSession`.
+
+-   **Formato (D-047):** JSON `{"checksum", "payload_json"}`. O payload
+    (`schema_version`, `game_version`, `saved_at`, `state`) é guardado
+    como texto, e o checksum SHA-256 cobre exatamente esse texto.
+-   **Escrita atômica (D-048):** grava `save.tmp`, relê e confere, gira os
+    backups e só então renomeia para `save.json`. Mantém `save.bak1.json`
+    e `save.bak2.json`. Um `save.json` corrompido é movido para
+    `save.corrupt.json` e os backups válidos não são tocados; um backup
+    inválido nunca sobrescreve um válido.
+-   **Leitura:** tenta `save.json`, `bak1`, `bak2` nessa ordem e usa o
+    primeiro que passar em formato, checksum, versão e validação do estado.
+    Ler nunca altera nem apaga arquivos.
+-   **Validação estrita (D-049):** o estado é validado contra as
+    definições antes de virar `NxGameState`. Qualquer erro invalida o
+    arquivo (cai no backup); não há reparo silencioso. Mudanças de
+    conteúdo entre versões do jogo (ids renomeados ou removidos) exigem
+    uma migração explícita.
+-   **Versões:** `schema_version` inteiro. Migrações são funções puras
+    `payload da versão N → N+1`, aplicadas em cadeia na leitura; o arquivo
+    antigo só é reescrito no próximo save. Save de versão mais nova que o
+    jogo: o carregamento falha com `version_too_new` (sem cair num backup
+    antigo) e o save recusa sobrescrevê-lo.
+-   **Teste de regressão:** `tests/fixtures/saves/v1_midgame.json` é um
+    save real da versão 1 e precisa continuar carregando. Ao criar a
+    versão 2, mantenha o arquivo e escreva a migração.
+-   Não salva referências transitórias de nós da cena.
+
+### Sessão (D-051)
+
+`NxSession.start` carrega, aplica o progresso offline e salva logo em
+seguida (para reabrir de novo não repetir nem perder o ganho).
+Save inválido ou de versão futura é devolvido como falha e **nunca**
+substituído sem o jogador escolher `NxSession.new_game`. O autosave
+periódico e os eventos de suspensão do Android ficam na camada de
+interface (Fase 6), que chama `NxSession.suspend`.
 
 ## 8. Testabilidade
 

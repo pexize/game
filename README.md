@@ -1,7 +1,7 @@
 # NEXUS --- Documentação do projeto
 
 **Versão:** 1.0\
-**Status:** Fases 0 a 4 (fundação, economia, rede, descobertas, melhorias e automação) concluídas; Fase 5 (save e offline) a seguir\
+**Status:** Fases 0 a 5 (lógica completa: economia, rede, descobertas, melhorias, automação, save e offline) concluídas; Fase 6 (interface mobile) a seguir\
 **Plataforma-alvo:** Android\
 **Engine:** Godot 4.7.2 / GDScript\
 **Modelo:** Idle incremental com descoberta por condições emergentes
