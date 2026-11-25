@@ -1,0 +1,9 @@
+{
+  "id": "system_analysis", "title_key": "DISC_SYSTEM_ANALYSIS", "hint_key": "HINT_SYSTEM_ANALYSIS",
+  "prerequisites": ["production_cycle"],
+  "conditions": [ { "type": "lifetime_produced", "resource": "data", "min": 5 } ],
+  "rewards": [
+    { "type": "unlock_component", "component": "processor" },
+    { "type": "unlock_feature", "feature": "efficiency_upgrades" }
+  ]
+}

@@ -41,11 +41,14 @@ func _initialize() -> void:
 		header.append("n_" + cid)
 	for rid in defs.resource_ids:
 		header.append("net_" + rid + "_per_s")
+	header.append("discoveries")
 	print(",".join(header))
 
 	for step in range(steps):
 		bot.act(state, defs)
-		var report := NxEconomyEngine.step(state, defs, dt)
+		var report := NxSimulation.tick(state, defs, dt)
+		for discovery_id: String in report.granted:
+			printerr("t=%ds: descoberta %s" % [state.time_ms / 1000, discovery_id])
 		if (step + 1) % every == 0:
 			var row := [str(state.time_ms / 1000)]
 			for rid in defs.resource_ids:
@@ -54,6 +57,7 @@ func _initialize() -> void:
 				row.append(str(state.count_of(cid)))
 			for rid in defs.resource_ids:
 				row.append("%.3f" % (report.net_rate(rid) / 1000.0))
+			row.append(str(state.discoveries.size()))
 			print(",".join(row))
 	quit(0)
 

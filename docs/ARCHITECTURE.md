@@ -58,7 +58,8 @@ NEXUS/
 ├── data/                    definições JSON (recursos, componentes, balance)
 ├── scripts/
 │   ├── core/nx_result.gd
-│   └── economy/             definições, estado, ledger, construção, motor
+│   ├── economy/             definições, estado, ledger, construção, rede, motor
+│   └── progression/         regras, avaliador e visibilidade das descobertas
 ├── tests/
 │   ├── runner.gd        runner headless (D-024)
 │   ├── framework/       base das suítes e asserts
@@ -139,8 +140,9 @@ instâncias; ele também calcula o conjunto de componentes ativos.
 -   connections
 -   next_instance_id
 -   unlocked_components
--   discoveries `{id: {order, time}}`
--   condition_progress (contadores de condições temporais)
+-   features (recursos liberados por recompensas, ex.: `automation`)
+-   discoveries `{id: {order, time_ms}}`
+-   condition_progress `{id: {índice da condição: ms}}`
 -   purchased_upgrades `{id: level}`
 -   automation_settings
 -   statistics (totais acumulados por recurso)

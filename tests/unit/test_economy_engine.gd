@@ -172,7 +172,7 @@ func test_same_inputs_give_same_hash() -> bool:
 ## Hash de referência: se mudar, o motor ou o arredondamento mudou.
 ## Calculado primeiro em x86_64; conferir também em arm64 (determinismo).
 func test_golden_hash_of_scripted_run() -> bool:
-	assert_eq(_scripted_run(Fixtures.defs()), "fb25ddf75503338160c345bc47a8d9eea9e87131664577245bbb735cb0fbf19a", "hash de referência")
+	assert_eq(_scripted_run(Fixtures.defs()), "b3f4f3c533f267a36129ab29e704ecaa2eec100628e49ec8daee49546e9084a8", "hash de referência")
 	return true
 
 
@@ -181,5 +181,5 @@ func _scripted_run(defs: NxDefinitions) -> String:
 	var bot := NxGreedyBot.new()
 	for i in range(300):
 		bot.act(state, defs)
-		NxEconomyEngine.step(state, defs, DT)
+		NxSimulation.tick(state, defs, DT)
 	return state.state_hash()

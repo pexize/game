@@ -55,6 +55,13 @@ visibilidade. - Testes de alcançabilidade e dependências.
 Critério de saída: sequência inicial de descobertas pode ser completada
 sem bloqueio.
 
+**Status: concluída em 2026-11-24.** Descobertas D1 a D8 em dados, com
+validação de alcançabilidade e de ciclos; avaliador com quatro famílias
+de condição, contadores sustentados salvos no estado, recompensas e
+visibilidade (obtida, disponível, distante, oculta); `NxSimulation.tick`;
+bot guloso que conclui as oito descobertas em ~190 s simulados. 122
+testes, com 11 mutações manuais detectadas.
+
 ## Fase 4 --- Melhorias e automação
 
 Entregas: - Melhorias por componente. - Melhorias globais. - Curvas de

@@ -102,7 +102,7 @@ conteúdo.
   D-035   Conexões persistidas como o campo `parent` de cada instância    Aprovada
           (0 = sem pai). Equivale à lista Connection do modelo, e um
           único pai por nó garante a árvore.
-  D-036   Ativação: o componente precisa de um caminho de nós            Proposta
+  D-036   Ativação: o componente precisa de um caminho de nós            Aprovada
           habilitados até o Core; desabilitar um nó desativa a sua
           sub-árvore. O multiplicador do Processor vale por inteiro
           enquanto ele estiver ativo, sem depender da eficiência dele
@@ -110,8 +110,28 @@ conteúdo.
   D-037   O Core não pode ser desabilitado. Remover reembolsa            Aprovada
           `removal_refund` do custo, arredondado para baixo e limitado
           pelo armazenamento, e deixa os filhos desconectados.
-  D-038   Construir não liga: o componente nasce solto e só opera        Proposta
+  D-038   Construir não liga: o componente nasce solto e só opera        Aprovada
           depois de ligado (a interface fará os dois passos juntos)
+
+## Decisões de implementação da Fase 3 (2026-11-24)
+
+  ID      Decisão                                                        Estado
+  ------- -------------------------------------------------------------- -----------
+  D-039   Descobertas em `data/discoveries/*.json`: condições quantita-   Aprovada
+          tivas, estruturais, funcionais (`sustained`) e históricas;
+          recompensas `unlock_component`, `unlock_feature`, `set_stage`.
+          Todas as condições de uma descoberta valem juntas.
+  D-040   O validador exige alcançabilidade: tudo o que uma descoberta    Aprovada
+          exige (componentes e recursos produzidos) precisa estar
+          disponível no início ou liberado por um pré-requisito dela,
+          e os pré-requisitos não podem formar ciclo.
+  D-041   `start_unlocked` passa a ser só o Generator (substitui o        Aprovada
+          provisório D-032). Collector, Analyzer, Relay e Processor são
+          liberados por D1, D2, D3 e D5. D-014 vale também para o que as
+          descobertas liberam.
+  D-042   Tick completo = economia, depois descobertas (`NxSimulation`).  Aprovada
+          Contadores sustentados zeram quando a condição falha e são
+          salvos no estado. A automação entra na Fase 4.
 
 Risco aberto: o Android SDK oficial não tem build-tools para Linux
 arm64, então gerar o APK neste Raspberry Pi pode não ser viável. Avaliar

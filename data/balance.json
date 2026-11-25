@@ -1,8 +1,8 @@
 {
-  "notes": "Valores provisórios de teste (ECONOMY.md §9). Quantidades em unidades; taxas por segundo. start_unlocked inclui collector, analyzer, relay e processor só até a Fase 3 (as descobertas D1 a D5 passam a liberá-los).",
+  "notes": "Valores provisórios de teste (ECONOMY.md §9). Quantidades em unidades; taxas por segundo. Collector, Analyzer, Relay e Processor são liberados pelas descobertas em data/discoveries.",
   "core_component": "core",
   "start_resources": { "energy": 5, "matter": 10 },
-  "start_unlocked": ["generator", "collector", "analyzer", "relay", "processor"],
+  "start_unlocked": ["generator"],
   "dt_active_ms": 1000,
   "dt_offline_ms": 60000,
   "offline_cap_s": 28800,

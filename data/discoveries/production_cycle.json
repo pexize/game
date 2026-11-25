@@ -1,0 +1,9 @@
+{
+  "id": "production_cycle", "title_key": "DISC_PRODUCTION_CYCLE", "hint_key": "HINT_PRODUCTION_CYCLE",
+  "prerequisites": ["first_connection"],
+  "conditions": [
+    { "type": "sustained", "seconds": 10,
+      "condition": { "type": "net_rate_positive", "resources": ["energy", "matter"] } }
+  ],
+  "rewards": [ { "type": "unlock_component", "component": "analyzer" } ]
+}

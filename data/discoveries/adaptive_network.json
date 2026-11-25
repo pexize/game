@@ -1,0 +1,10 @@
+{
+  "id": "adaptive_network", "title_key": "DISC_ADAPTIVE_NETWORK", "hint_key": "HINT_ADAPTIVE_NETWORK",
+  "prerequisites": ["distributed_system", "system_analysis"],
+  "conditions": [
+    { "type": "active_component_count", "component": "relay", "min": 1 },
+    { "type": "parent_distinct_children", "parent": "processor", "min_distinct": 2 },
+    { "type": "active_distinct_types", "min": 4 }
+  ],
+  "rewards": [ { "type": "unlock_feature", "feature": "advanced_upgrades" } ]
+}

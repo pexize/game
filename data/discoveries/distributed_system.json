@@ -1,0 +1,6 @@
+{
+  "id": "distributed_system", "title_key": "DISC_DISTRIBUTED_SYSTEM", "hint_key": "HINT_DISTRIBUTED_SYSTEM",
+  "prerequisites": [],
+  "conditions": [ { "type": "active_component_count", "min": 3 } ],
+  "rewards": [ { "type": "unlock_component", "component": "relay" } ]
+}

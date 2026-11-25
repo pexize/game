@@ -12,6 +12,8 @@ var lost := {}
 var ratios := {}
 ## instance_id -> eficiência operacional (0..1) dos componentes ativos
 var efficiency := {}
+## ids das descobertas concedidas depois deste passo (preenchido por NxSimulation)
+var granted: Array = []
 
 
 ## Taxa líquida em milésimos por segundo (produção − consumo).

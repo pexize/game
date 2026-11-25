@@ -17,6 +17,14 @@ var unlocked := {}
 var lifetime_produced := {}
 ## tempo simulado em milissegundos
 var time_ms := 0
+## id da descoberta -> {"order": int, "time_ms": int}; cada uma só é concedida uma vez
+var discoveries := {}
+## id da descoberta -> {índice da condição (String): ms acumulados} das condições "sustained"
+var condition_progress := {}
+## recursos liberados por recompensas (ex.: "automation"); id -> true
+var features := {}
+## estágio atual (1 = Emergence, 2 = Organization)
+var stage := 1
 
 
 static func new_game(defs: NxDefinitions) -> NxGameState:
@@ -47,6 +55,14 @@ func count_of(def_id: String) -> int:
 	return count
 
 
+func has_discovery(discovery_id: String) -> bool:
+	return discoveries.has(discovery_id)
+
+
+func has_feature(feature_id: String) -> bool:
+	return features.has(feature_id)
+
+
 func is_unlocked(def_id: String) -> bool:
 	return unlocked.has(def_id)
 
@@ -68,6 +84,10 @@ func to_dict() -> Dictionary:
 		"unlocked": unlocked_ids,
 		"lifetime_produced": lifetime_produced.duplicate(),
 		"time_ms": time_ms,
+		"discoveries": discoveries.duplicate(true),
+		"condition_progress": condition_progress.duplicate(true),
+		"features": features.keys(),
+		"stage": stage,
 	}
 
 
@@ -86,6 +106,14 @@ static func from_dict(data: Dictionary) -> NxGameState:
 		}
 	for cid: String in data.get("unlocked", []):
 		state.unlocked[cid] = true
+	state.stage = int(data.get("stage", 1))
+	for fid: String in data.get("features", []):
+		state.features[fid] = true
+	for did: String in data.get("discoveries", {}):
+		var entry: Dictionary = data["discoveries"][did]
+		state.discoveries[did] = {"order": int(entry["order"]), "time_ms": int(entry["time_ms"])}
+	for did: String in data.get("condition_progress", {}):
+		state.condition_progress[did] = _ints(data["condition_progress"][did])
 	return state
 
 

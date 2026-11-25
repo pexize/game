@@ -1,0 +1,9 @@
+{
+  "id": "data_acquisition", "title_key": "DISC_DATA_ACQUISITION", "hint_key": "HINT_DATA_ACQUISITION",
+  "prerequisites": ["production_cycle"],
+  "conditions": [
+    { "type": "sustained", "seconds": 10,
+      "condition": { "type": "net_rate_positive", "resources": ["data"] } }
+  ],
+  "rewards": [ { "type": "unlock_feature", "feature": "data_upgrades" } ]
+}

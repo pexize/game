@@ -1,0 +1,6 @@
+{
+  "id": "first_connection", "title_key": "DISC_FIRST_CONNECTION", "hint_key": "HINT_FIRST_CONNECTION",
+  "prerequisites": [],
+  "conditions": [ { "type": "active_component_count", "min": 1 } ],
+  "rewards": [ { "type": "unlock_component", "component": "collector" } ]
+}

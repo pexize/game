@@ -43,6 +43,10 @@ var components := {}
 ## core_component, start_resources (milli), start_unlocked, dt_active_ms,
 ## dt_offline_ms, offline_cap_s, offline_efficiency, removal_refund
 var balance := {}
+## id -> descoberta normalizada (ver NxDiscoveryRules)
+var discoveries := {}
+## ids em ordem topológica: pré-requisitos sempre antes de quem depende deles
+var discovery_order := PackedStringArray()
 
 
 func is_valid() -> bool:
@@ -53,14 +57,15 @@ static func load_from_dir(dir_path: String) -> NxDefinitions:
 	var defs := NxDefinitions.new()
 	var raw_resources := defs._read_dir(dir_path.path_join("resources"))
 	var raw_components := defs._read_dir(dir_path.path_join("components"))
+	var raw_discoveries := defs._read_dir(dir_path.path_join("discoveries"))
 	var raw_balance: Variant = defs._read_file(dir_path.path_join("balance.json"))
-	defs._build(raw_resources, raw_components, raw_balance if raw_balance is Dictionary else {})
+	defs._build(raw_resources, raw_components, raw_balance if raw_balance is Dictionary else {}, raw_discoveries)
 	return defs
 
 
-static func from_dicts(raw_resources: Array, raw_components: Array, raw_balance: Dictionary) -> NxDefinitions:
+static func from_dicts(raw_resources: Array, raw_components: Array, raw_balance: Dictionary, raw_discoveries: Array = []) -> NxDefinitions:
 	var defs := NxDefinitions.new()
-	defs._build(raw_resources, raw_components, raw_balance)
+	defs._build(raw_resources, raw_components, raw_balance, raw_discoveries)
 	return defs
 
 
@@ -104,10 +109,26 @@ func _read_file(path: String) -> Variant:
 
 # --- validação -------------------------------------------------------------
 
-func _build(raw_resources: Array, raw_components: Array, raw_balance: Dictionary) -> void:
+func _build(raw_resources: Array, raw_components: Array, raw_balance: Dictionary, raw_discoveries: Array) -> void:
 	_build_resources(raw_resources)
 	_build_components(raw_components)
 	_build_balance(raw_balance)
+	NxDiscoveryRules.build(self, raw_discoveries)
+	_check_winnable_with_discoveries()
+
+
+## D-014 sobre tudo o que o jogo pode liberar: componentes do início mais os
+## liberados por recompensas de descobertas.
+func _check_winnable_with_discoveries() -> void:
+	var core_id: String = balance.get("core_component", "")
+	if not components.has(core_id) or not balance.has("start_unlocked"):
+		return
+	var all_unlocked: Array = balance["start_unlocked"].duplicate()
+	for id in discovery_order:
+		for reward: Dictionary in discoveries[id]["rewards"]:
+			if reward["type"] == "unlock_component" and not all_unlocked.has(reward["component"]):
+				all_unlocked.append(reward["component"])
+	_check_start_is_winnable(core_id, balance["start_resources"], all_unlocked, "balance")
 
 
 func _build_resources(raw_list: Array) -> void:
@@ -220,9 +241,6 @@ func _build_balance(raw: Dictionary) -> void:
 			else:
 				_err("%s: 'start_unlocked' usa componente desconhecido '%s'" % [where, cid])
 
-	if components.has(core_id):
-		_check_start_is_winnable(core_id, start, unlocked, where)
-
 	var dt_active := _required_whole(raw, "dt_active_ms", where)
 	var dt_offline := _required_whole(raw, "dt_offline_ms", where)
 	var cap_s := _required_whole(raw, "offline_cap_s", where)
@@ -257,7 +275,8 @@ func _check_start_is_winnable(core_id: String, start: Dictionary, unlocked: Arra
 	var producible := {}
 	for rid: String in components[core_id]["outputs"]:
 		producible[rid] = true
-	var pending: Array = unlocked.filter(func(cid: String) -> bool: return cid != core_id)
+	var pending: Array = unlocked.filter(
+		func(cid: String) -> bool: return cid != core_id and components.has(cid))
 
 	var progress := true
 	while progress and not pending.is_empty():

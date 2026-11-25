@@ -146,7 +146,15 @@ ou regras.
 
 ### Descobertas planejadas
 
-Valores numéricos (N, X s) são parâmetros de dados a calibrar.
+Os valores abaixo são os de teste que estão em `data/discoveries/`; todos
+são dados, não código, e serão calibrados. Cada descoberta só é
+avaliada depois que os seus pré-requisitos foram obtidos (coluna
+"Exige"). Os pré-requisitos formais são: D2 ← D1; D4 ← D2; D5 ← D2;
+D6 ← D2, D3; D7 ← D3, D5; D8 ← D1 a D7; D1 e D3 não têm.
+
+Valores de teste: D2 e D4 sustentadas por 10 s; D5 com 5 de Data
+produzido; D6 com 5 componentes ativos por 30 s; D8 com 100 de Matter
+produzido.
 
   \#   Descoberta           Condição                                               Exige (já disponível)          Recompensa
   ---- -------------------- ------------------------------------------------------ ------------------------------ ----------------------------------------------
@@ -187,6 +195,10 @@ acíclico.
     conclui D1--D8 a partir de uma partida nova.
 
 ### Como as condições medem taxas
+
+Se uma descoberta sustentada tem como pré-requisito outra concedida no
+mesmo passo, o contador já conta esse passo (a avaliação segue a ordem
+topológica dentro do passo).
 
 "Taxa líquida" em condições de descoberta significa **produção −
 consumo do passo, antes do limite de armazenamento**. Assim, um recurso

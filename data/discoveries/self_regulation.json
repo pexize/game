@@ -1,0 +1,9 @@
+{
+  "id": "self_regulation", "title_key": "DISC_SELF_REGULATION", "hint_key": "HINT_SELF_REGULATION",
+  "prerequisites": ["production_cycle", "distributed_system"],
+  "conditions": [
+    { "type": "sustained", "seconds": 30,
+      "condition": { "type": "all_active_full_efficiency", "require": ["collector", "analyzer"], "min_active": 5 } }
+  ],
+  "rewards": [ { "type": "unlock_feature", "feature": "automation" } ]
+}

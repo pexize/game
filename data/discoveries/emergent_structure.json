@@ -1,0 +1,9 @@
+{
+  "id": "emergent_structure", "title_key": "DISC_EMERGENT_STRUCTURE", "hint_key": "HINT_EMERGENT_STRUCTURE",
+  "prerequisites": [
+    "first_connection", "production_cycle", "distributed_system", "data_acquisition",
+    "system_analysis", "self_regulation", "adaptive_network"
+  ],
+  "conditions": [ { "type": "lifetime_produced", "resource": "matter", "min": 100 } ],
+  "rewards": [ { "type": "set_stage", "stage": 2 } ]
+}
