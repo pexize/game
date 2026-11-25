@@ -1,0 +1,7 @@
+{
+  "id": "collector", "name_key": "COMP_COLLECTOR",
+  "cost": { "matter": 10 },
+  "inputs": { "energy": 0.5 },
+  "outputs": { "matter": 0.5 },
+  "output_ports": 1, "protect_last": true
+}

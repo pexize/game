@@ -56,6 +56,18 @@ que quebrem essa ordem. Isso elimina, por construção, ciclos que criem
 recursos gratuitamente. O Processor não transforma recursos, só
 multiplica produção, e por isso não altera a cadeia (D-019).
 
+### Unidades e dados (D-030, D-031)
+
+-   Internamente, quantidades são inteiros em milésimos e taxas em
+    milésimos por segundo. Os arquivos em `data/` usam unidades
+    "humanas" (`10` = dez unidades, `0.5` = meia unidade por segundo).
+-   Cada recurso tem um `tier` (Energy 0, Matter 1, Data 2). O motor
+    resolve os recursos nessa ordem, e o validador exige que a saída de
+    um componente tenha tier maior que todas as suas entradas.
+-   O validador também verifica o início sem bloqueio (D-014): todo
+    componente liberado no início precisa ser construível por reserva
+    inicial ou por produção de algo construível.
+
 ## 4. Produção
 
 Modelo conceitual:

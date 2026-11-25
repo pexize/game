@@ -1,7 +1,7 @@
 # NEXUS --- Documentação do projeto
 
 **Versão:** 1.0\
-**Status:** Fase 0 (fundação) concluída; Fase 1 (economia) a seguir\
+**Status:** Fases 0 (fundação) e 1 (economia) concluídas; Fase 2 (rede) a seguir\
 **Plataforma-alvo:** Android\
 **Engine:** Godot 4.7.2 / GDScript\
 **Modelo:** Idle incremental com descoberta por condições emergentes
@@ -33,6 +33,9 @@ tools/run_tests.sh
 
 # Smoke test: executa a cena principal por 300 frames e procura erros no log
 tools/smoke.sh
+
+# Simular a economia sem interface (CSV em stdout)
+tools/simulate.sh --steps=300 --every=20
 
 # Abrir o editor
 ~/bin/godot --path . -e

@@ -1,0 +1,5 @@
+{
+  "id": "core", "name_key": "COMP_CORE",
+  "outputs": { "energy": 1.0 },
+  "output_ports": 3, "removable": false, "build_limit": 1
+}

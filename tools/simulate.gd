@@ -1,0 +1,69 @@
+extends SceneTree
+## Simulador de economia sem interface (substitui a planilha de balanceamento).
+##
+## Uso (via tools/simulate.sh):
+##   godot --headless --path . --script res://tools/simulate.gd -- \
+##       [--steps=600] [--every=10] [--plan=collector,generator,...]
+##
+## Saída: CSV em stdout, uma linha a cada `every` passos. `--plan` troca a
+## lista de prioridades do bot (cada item repetido conta uma unidade).
+
+const DATA_DIR := "res://data"
+
+
+func _initialize() -> void:
+	var steps := 600
+	var every := 10
+	var plan_arg := ""
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--steps="):
+			steps = int(arg.trim_prefix("--steps="))
+		elif arg.begins_with("--every="):
+			every = maxi(1, int(arg.trim_prefix("--every=")))
+		elif arg.begins_with("--plan="):
+			plan_arg = arg.trim_prefix("--plan=")
+
+	var defs := NxDefinitions.load_from_dir(DATA_DIR)
+	if not defs.is_valid():
+		for error in defs.errors:
+			printerr("ERRO DE DADOS: " + error)
+		quit(2)
+		return
+
+	var bot := NxGreedyBot.new(_parse_plan(plan_arg)) if not plan_arg.is_empty() else NxGreedyBot.new()
+	var state := NxGameState.new_game(defs)
+	var dt: int = defs.balance["dt_active_ms"]
+
+	var header := ["t_s"]
+	for rid in defs.resource_ids:
+		header.append(rid)
+	for cid in ["generator", "collector", "analyzer"]:
+		header.append("n_" + cid)
+	for rid in defs.resource_ids:
+		header.append("net_" + rid + "_per_s")
+	print(",".join(header))
+
+	for step in range(steps):
+		bot.act(state, defs)
+		var report := NxEconomyEngine.step(state, defs, dt)
+		if (step + 1) % every == 0:
+			var row := [str(state.time_ms / 1000)]
+			for rid in defs.resource_ids:
+				row.append("%.3f" % (state.amount(rid) / 1000.0))
+			for cid in ["generator", "collector", "analyzer"]:
+				row.append(str(state.count_of(cid)))
+			for rid in defs.resource_ids:
+				row.append("%.3f" % (report.net_rate(rid) / 1000.0))
+			print(",".join(row))
+	quit(0)
+
+
+## "generator,collector,generator" -> [["generator", 2], ["collector", 1]]
+## (a quantidade desejada é a contagem acumulada até aquela posição).
+func _parse_plan(text: String) -> Array:
+	var counts := {}
+	var plan := []
+	for id in text.split(",", false):
+		counts[id] = int(counts.get(id, 0)) + 1
+		plan.append([id, counts[id]])
+	return plan

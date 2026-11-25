@@ -55,6 +55,10 @@ NEXUS/
 │   └── upgrades/
 ├── assets/
 ├── localization/
+├── data/                    definições JSON (recursos, componentes, balance)
+├── scripts/
+│   ├── core/nx_result.gd
+│   └── economy/             definições, estado, ledger, construção, motor
 ├── tests/
 │   ├── runner.gd        runner headless (D-024)
 │   ├── framework/       base das suítes e asserts
@@ -62,6 +66,8 @@ NEXUS/
 │   └── output/          logs (ignorado no Git)
 └── tools/
     ├── run_tests.sh     importa o projeto e roda os testes
+    ├── simulate.sh      simula a economia e imprime CSV (bot guloso)
+    ├── greedy_bot.gd    jogador automático para simulação e testes
     └── smoke.sh         executa a cena principal e procura erros
 ```
 

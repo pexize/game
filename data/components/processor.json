@@ -1,0 +1,6 @@
+{
+  "id": "processor", "name_key": "COMP_PROCESSOR",
+  "cost": { "matter": 40, "data": 10 },
+  "inputs": { "energy": 0.8 },
+  "output_ports": 2, "child_multiplier": 1.5
+}

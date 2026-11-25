@@ -1,0 +1,7 @@
+{
+  "id": "analyzer", "name_key": "COMP_ANALYZER",
+  "cost": { "matter": 25 },
+  "inputs": { "energy": 1.0, "matter": 0.2 },
+  "outputs": { "data": 0.1 },
+  "output_ports": 1
+}

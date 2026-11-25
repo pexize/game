@@ -23,6 +23,14 @@ Construção básica. - Simulação determinística. - Testes econômicos.
 
 Critério de saída: simulação reproduzível sem interface elaborada.
 
+**Status: concluída em 2026-11-24.** Implementados: validador de
+definições, estado, ledger atômico, construção, motor de passo
+determinístico, simulador CSV (`tools/simulate.sh`) e 56 testes
+(inclui testes de mutação manuais do motor). Adiados de propósito: o
+`GameManager` com acumulador de passo fixo e a tela de debug, que só
+fazem sentido junto da interface (Fase 6); a rede e o multiplicador do
+Processor (Fase 2).
+
 ## Fase 2 --- Componentes e rede
 
 Entregas: - Instâncias de componentes. - Conexões direcionadas. -

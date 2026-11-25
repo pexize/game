@@ -1,0 +1,6 @@
+{
+  "id": "generator", "name_key": "COMP_GENERATOR",
+  "cost": { "energy": 10 },
+  "outputs": { "energy": 1.5 },
+  "output_ports": 1
+}

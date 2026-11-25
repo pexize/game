@@ -76,6 +76,25 @@ conteúdo.
   D-029   D6 exige ≥ 1 Collector e ≥ 1 Analyzer ativos com eficiência    GDD §7
           100%. Antes, uma rede só de Generators cumpria a condição.
 
+## Decisões de implementação da Fase 1 (2026-11-24)
+
+  ID      Decisão                                                        Estado
+  ------- -------------------------------------------------------------- ----------
+  D-030   Quantidades em inteiros (milésimos de unidade) e taxas em       Aprovada
+          milésimos por segundo; produção e consumo arredondados para
+          baixo, então o motor nunca cria recursos por arredondamento.
+          O JSON de `data/` usa unidades "humanas".
+  D-031   Cada recurso tem um `tier`; toda saída de um componente deve    Aprovada
+          ter tier maior que todas as suas entradas. O validador rejeita
+          dados que quebrem a cadeia, impedindo ciclos de geração.
+  D-032   Provisório: `start_unlocked` inclui Collector e Analyzer até    Provisória
+          a Fase 3, quando D1 e D2 passam a liberá-los
+  D-033   Classes de lógica têm prefixo `Nx` (`NxEconomyEngine`...) e     Aprovada
+          usam `class_name`; nenhuma depende de nós ou autoloads
+  D-034   Valores de `data/` são provisórios. O Collector consome 0.5     Provisória
+          de Energy (com 1.0 o saldo líquido de Energy zerava e o
+          jogador que o construísse primeiro não pagaria o Generator)
+
 Risco aberto: o Android SDK oficial não tem build-tools para Linux
 arm64, então gerar o APK neste Raspberry Pi pode não ser viável. Avaliar
 antes da Fase 6 (opções: outra máquina x86_64 ou CI).

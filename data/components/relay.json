@@ -1,0 +1,6 @@
+{
+  "id": "relay", "name_key": "COMP_RELAY",
+  "cost": { "matter": 15 },
+  "inputs": { "energy": 0.3 },
+  "output_ports": 4
+}
