@@ -155,8 +155,8 @@ Valores numéricos (N, X s) são parâmetros de dados a calibrar.
   3    Distributed System   ≥ 3 componentes não-Core ativos                        Portas do Core                 Relay
   4    Data Acquisition     Analyzer ativo produzindo Data por X s                 Analyzer (D2)                  Melhorias pagas em Data
   5    System Analysis      Data produzido acumulado ≥ N                           Analyzer (D2)                  Processor + melhorias Efficiency
-  6    Self Regulation      ≥ N componentes ativos, todos com eficiência 100%,     Generators, Relay (D3)         Automação inicial
-                            por X s
+  6    Self Regulation      ≥ N componentes ativos, incluindo ≥ 1 Collector e      Collector (D1), Analyzer       Automação inicial
+                            ≥ 1 Analyzer, todos com eficiência 100%, por X s       (D2), Relay (D3)
   7    Adaptive Network     Processor ativo com ≥ 2 filhos de tipos diferentes,    Processor (D5), Relay (D3)     Melhorias avançadas
                             Relay ativo e ≥ 4 tipos distintos ativos
   8    Emergent Structure   D1--D7 obtidas e Matter produzido acumulado ≥ N        ---                            Stage II
@@ -166,19 +166,16 @@ Valores numéricos (N, X s) são parâmetros de dados a calibrar.
 Grafo de desbloqueio (A → B: A libera algo que B exige):
 
 ``` text
-Início ──► D1 ──► D2 ──► D4
-  │               │
-  │               └────► D5 ──► D7
-  │                             ▲
-  └──► D3 ──────────────────────┤
-         └────────────► D6      │
-                                │
-D1..D7 obtidas ───────────────► D8
+Camada 0  Início
+Camada 1  D1 ← Início (Generator)       D3 ← Início (Generators + 3 portas do Core)
+Camada 2  D2 ← D1 (Collector)
+Camada 3  D4 ← D2 (Analyzer)    D5 ← D2 (Analyzer)    D6 ← D2 (Analyzer), D3 (Relay)
+Camada 4  D7 ← D3 (Relay), D5 (Processor)
+Camada 5  D8 ← D1..D7
 ```
 
-Arestas: Início→D1 (Generator), D1→D2 (Collector), Início→D3
-(Generators + 3 portas do Core), D2→D4 e D2→D5 (Analyzer), D3→D6 e
-D3→D7 (Relay), D5→D7 (Processor), D1..D7→D8.
+Cada descoberta só depende de camadas anteriores, logo o grafo é
+acíclico.
 
 -   O grafo não tem ciclos: cada descoberta só exige componentes do
     estado inicial ou de descobertas anteriores.
@@ -188,6 +185,13 @@ D3→D7 (Relay), D5→D7 (Processor), D1..D7→D8.
 -   Funcionalidade de teste: a Fase 3 deve incluir um teste estático
     (grafo acíclico, referências válidas) e um jogador automático que
     conclui D1--D8 a partir de uma partida nova.
+
+### Como as condições medem taxas
+
+"Taxa líquida" em condições de descoberta significa **produção −
+consumo do passo, antes do limite de armazenamento**. Assim, um recurso
+parado no máximo (Energy cheia) continua contando como em produção, e
+D2 não fica bloqueada por uma rede saudável (D-028).
 
 ### Condições temporais e offline
 

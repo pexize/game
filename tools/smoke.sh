@@ -8,6 +8,7 @@ GODOT="${GODOT:-$HOME/bin/godot}"
 FRAMES="${1:-300}"
 OUT_DIR="tests/output"
 mkdir -p "$OUT_DIR"
+touch "$OUT_DIR/.gdignore"  # impede o Godot de importar os logs
 
 timeout 300 "$GODOT" --headless --path . --import >"$OUT_DIR/import.log" 2>&1
 timeout 300 "$GODOT" --headless --path . --quit-after "$FRAMES" >"$OUT_DIR/smoke.log" 2>&1

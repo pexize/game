@@ -8,6 +8,7 @@ cd "$(dirname "$0")/.."
 GODOT="${GODOT:-$HOME/bin/godot}"
 OUT_DIR="tests/output"
 mkdir -p "$OUT_DIR"
+touch "$OUT_DIR/.gdignore"  # impede o Godot de importar os logs
 
 if ! command -v "$GODOT" >/dev/null 2>&1; then
 	echo "Godot não encontrado em '$GODOT'. Defina GODOT=/caminho/para/godot." >&2

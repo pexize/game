@@ -66,6 +66,16 @@ conteúdo.
   D-027   Arquivos `.uid` gerados pelo Godot são versionados; `.godot/`   Aprovada
           não é
 
+## Correções de fluxo (2026-11-24) --- aprovadas
+
+  ID      Decisão                                                        Docs afetados
+  ------- -------------------------------------------------------------- -------------------
+  D-028   Taxas usadas em condições e na interface = produção − consumo  GDD §7, ECONOMY §5
+          antes do limite de armazenamento. Evita que D2 fique
+          bloqueada com Energy no máximo.
+  D-029   D6 exige ≥ 1 Collector e ≥ 1 Analyzer ativos com eficiência    GDD §7
+          100%. Antes, uma rede só de Generators cumpria a condição.
+
 Risco aberto: o Android SDK oficial não tem build-tools para Linux
 arm64, então gerar o APK neste Raspberry Pi pode não ser viável. Avaliar
 antes da Fase 6 (opções: outra máquina x86_64 ou CI).

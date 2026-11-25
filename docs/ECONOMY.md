@@ -93,6 +93,11 @@ Passo fixo `dt` (valor inicial de teste: 1 s). Cada passo:
 5.  **Pós-passo:** atualizar estatísticas acumuladas, contadores de
     condições, descobertas e automação, nesta ordem.
 
+O relatório do passo guarda produção e consumo **antes** do limite de
+armazenamento, e também a perda por limite. Condições de descoberta e a
+taxa líquida exibida usam produção − consumo (D-028); a perda por
+limite é exibida à parte.
+
 Propriedades garantidas e testadas:
 
 -   **Independência de ordem:** como todos os consumidores de um recurso
